@@ -24,13 +24,9 @@ var target = document.querySelector('#robinChatMessageList');
 var messageList = $('#robinChatMessageList');
 var userList = $('#robinUserList'); 
 
-// Ignore buttons
-$('.robin-room-participant').on('click', function(){
-    var username = $(this).children('.robin--username').text();
-    var confirm = window.confirm('Are you sure you want to ignore ' + username + '?');
-    if(confirm){
-        ignoreUser(username);
-    }    
+userList.children().each(function(index, item){
+    var user = $(item).children('.robin--username');
+    user.wrap('<a href="https://www.reddit.com/u/'+user.text()+'"></a>');  
 });
 
 // create an observer instance
@@ -39,10 +35,14 @@ var observer = new MutationObserver(function(mutations) {
         var comment = $(mutation.addedNodes[0]);
         var user = comment.children('.robin-message--from');
         var message = comment.children('.robin-message--message');
-        var userName = user.text();        
-        user.wrap('<a href="https://www.reddit.com/u/'+userName+'"></a>');        
+        var timestamp =  $('.robin-message--timestamp');
+        var userName = user.text();
         message.linkify();
         
+        // Ignore timestamp click
+       user.on('click', clickIgnore);
+        
+        // Should we ignore message?
         if(GM_getValue("ignoring")){
             var ignoringCurrently = GM_getValue("ignoring").split('|');
             var hits = ignoringCurrently.filter(function(ignoringUsername){
@@ -95,6 +95,13 @@ function ignoreUser(username){
     messageList.append(getRobinMessage('Ignoring ' + username));
 }
 
+function clickIgnore(){
+    var username = $(this).text();
+    var confirm = window.confirm('Are you sure you want to ignore ' + username + '?');
+    if(confirm){
+        ignoreUser(username);
+    }    
+}
 
 // Build robin message
 function getRobinMessage(text){
