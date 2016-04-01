@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         reddit-robin-enhancements
 // @namespace    http://tampermonkey.net/
-// @version      0.6
+// @version      0.7
 // @description  Add useful features to Reddit Robin
 // @author       You
 // @match        https://www.reddit.com/robin/
@@ -13,10 +13,25 @@
 /* jshint -W097 */
 'use strict';
 
+// Chat list
+// robin-room-participant
+// robin--user-class--user
+// robin--presence-class--present
+// robin--vote-class--increase
+
 // select the target node
 var target = document.querySelector('#robinChatMessageList');
 var messageList = $('#robinChatMessageList');
 var userList = $('#robinUserList'); 
+
+// Ignore buttons
+$('.robin-room-participant').on('click', function(){
+    var username = $(this).children('.robin--username').text();
+    var confirm = window.confirm('Are you sure you want to ignore ' + username + '?');
+    if(confirm){
+        ignoreUser(username);
+    }    
+});
 
 // create an observer instance
 var observer = new MutationObserver(function(mutations) {
@@ -35,16 +50,13 @@ var observer = new MutationObserver(function(mutations) {
             });
             if(hits.length > 0){
                 comment.remove();
-                console.log('Just ignored a message from ' + hits[0]);
+                console.debug('Just ignored a message from ' + hits[0]);
             }                        
         }
         
         if(message.text().indexOf('!ignore ') > -1 && r.config.logged === userName){
             var targetUser = message.text().split(' ')[1];
-            var ignoringCurrently = GM_getValue("ignoring");
-            ignoringCurrently += "|" + targetUser;            
-            GM_setValue("ignoring", ignoringCurrently);
-            messageList.append(getRobinMessage('Ignoring ' + targetUser));
+            ignoreUser(targetUser);
         }
 
         if(message.text().indexOf('!clearignore') > -1 && r.config.logged === userName){       
@@ -76,7 +88,12 @@ var config = { attributes: true, childList: true, characterData: true }
 observer.observe(target, config);
 
 // Ignore
-var users = userList.children('.robin-room-participant');
+function ignoreUser(username){ 
+    var ignoringCurrently = GM_getValue("ignoring");
+    ignoringCurrently += "|" + username;       
+    GM_setValue("ignoring", ignoringCurrently);
+    messageList.append(getRobinMessage('Ignoring ' + username));
+}
 
 
 // Build robin message
