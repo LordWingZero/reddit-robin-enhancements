@@ -11,3 +11,4 @@ A Tampermonkey script to enhance Reddit Robin.
 * ```!ignore <username>``` ignores a user.
 * ```!unignore <username>``` unignores a user.
 * ```!clearignore``` clears all ignore.
+* You can also click a users name in the userlist to ignore
