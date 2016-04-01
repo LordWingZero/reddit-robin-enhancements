@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Robin Enhancements
+// @name         reddit-robin-enhancements
 // @namespace    http://tampermonkey.net/
-// @version      0.1
-// @description  try to take over the world!
+// @version      0.2
+// @description  Add useful features to Reddit Robin
 // @author       You
 // @match        https://www.reddit.com/robin/
 // @grant        none
