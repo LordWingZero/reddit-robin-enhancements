@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         reddit-robin-enhancements
 // @namespace    http://tampermonkey.net/
-// @version      0.2
+// @version      0.6
 // @description  Add useful features to Reddit Robin
 // @author       You
 // @match        https://www.reddit.com/robin/
 // @grant        none
-// @require https://cdnjs.cloudflare.com/ajax/libs/jQuery-linkify/1.1.7/jquery.linkify.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/jQuery-linkify/1.1.7/jquery.linkify.js
 // @grant       GM_getValue
 // @grant       GM_setValue
 // ==/UserScript==
@@ -28,7 +28,7 @@ var observer = new MutationObserver(function(mutations) {
         user.wrap('<a href="https://www.reddit.com/u/'+userName+'"></a>');        
         message.linkify();
         
-        if(GM_getValue("ignoring") !== null){
+        if(GM_getValue("ignoring")){
             var ignoringCurrently = GM_getValue("ignoring").split('|');
             var hits = ignoringCurrently.filter(function(ignoringUsername){
                 return ignoringUsername === userName;
@@ -53,7 +53,7 @@ var observer = new MutationObserver(function(mutations) {
         }
 
         if(message.text().indexOf('!unignore ') > -1 && r.config.logged === userName){   
-            if(GM_getValue("ignoring") !== null){
+            if(GM_getValue("ignoring")){
                 var targetUser = message.text().split(' ')[1];
                 var ignoringCurrently = GM_getValue("ignoring").split('|');
                 var hits = ignoringCurrently.filter(function(ignoringUsername){
@@ -89,8 +89,11 @@ function getRobinMessage(text){
     ].join(''));                          
 }
 
-// Advertise
-// TODO: r.robin.models how to use robinMessage?
+/* TODO: Advertise
+* r.robin.models how to use robinMessage?
+* Do we even want to be a spamming jerk?
+*/ 
+
 // setTimeout(function(){
 //    if(Math.random() < 0.2)
 //    {
