@@ -4,7 +4,7 @@
 // @version      0.8
 // @description  Add useful features to Reddit Robin
 // @author       You
-// @match        https://www.reddit.com/robin
+// @match        https://www.reddit.com/robin*
 // @grant        none
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jQuery-linkify/1.1.7/jquery.linkify.js
 // @grant       GM_getValue
@@ -124,4 +124,3 @@ function getRobinMessage(text){
 //        sendMessage("[reddit-robin-enhancements 0.2] https://redd.it/4cxlyz");
 //    }
 //}, 5000);
-
